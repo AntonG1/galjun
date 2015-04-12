@@ -32,20 +32,47 @@
             <div class="main wrapper clearfix">
                 <article>
                     <header class="jezik">
-						&nbsp;<h6>HR<img src="img/hr.PNG">&nbsp;</h6><h6>ENG<img src="img/eng.PNG">&nbsp;</h6> &nbsp;
-						<center><a href="index.php"><h1>MENI GALJUN</h1></a></center>
+						<center><?php
+						if (isset($_GET['lan'])) {
+							$lang = $_GET['lan'];
+							}
+							else{$lang = "en";}
+							$link = "index.php?lan=$lang";
+							echo "<a href='".$link."'><h1>MENI GALJUN</h1></a>"; ?></center>
                     </header>
 					<section>
-						<h1>Cijenik pića</h1>
-                        <p>lista pića</p>
+					<?php
+							if (isset($_GET['lan'])) {
+							$lang = $_GET['lan'];
+							}
+							$con=mysqli_connect('localhost','root','root','galjun') or die('Error connecting to MySQL server.');
+							if(isset($lang) && $lang == "hr"){
+							$upit="SELECT * FROM pica";
+							}
+							else{
+							$upit="SELECT * FROM drinks";
+							}
+							$result = mysqli_query($con, $upit);
+					
+							while($row = mysqli_fetch_array($result)) {
+
+							$cijena=$row['drinkPrice'];
+							$pice=$row['drink'];
+							echo "<p>$pice.......$cijena</p>";
+							}
+							
+
+	
+				mysqli_close($con);
+				?> 
 					</section>
 
 
                 </article>
 
 
-            </div> <!-- #main -->
-        </div> <!-- #main-container -->
+            </div> 
+        </div> 
 
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

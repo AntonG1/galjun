@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
@@ -32,23 +32,59 @@
             <div class="main wrapper clearfix">
                 <article>
                     <header class="jezik">
-						&nbsp;<h6>HR<img src="img/hr.PNG">&nbsp;</h6><h6>ENG<img src="img/eng.PNG">&nbsp;</h6> &nbsp;
-						<center><a href="index.php"><h1>MENI GALJUN</h1></a></center>
+						&nbsp;<a href="?lan=hr"><h6>HR<img src="img/hr.PNG"></a>&nbsp;<a href="?lan=en"></h6><h6>ENG<img src="img/eng.PNG">&nbsp;</h6></a> &nbsp;
+						<center><?php
+						if (isset($_GET['lan'])) {
+							$lang = $_GET['lan'];
+							}
+							else{$lang = "en";}
+							$link = "index.php?lan=$lang";
+							echo "<a href='".$link."'><h1>MENI GALJUN</h1></a>"; ?></center>
                     </header>
 					<section>
-						<h1>Jela</h1>
-                        <a href="jelo.php"><p>Lista jela</p></a>
+						
+						<?php
+								
+								$con=mysqli_connect('localhost','root','root','galjun') or die('Error connecting to MySQL server.');
+								if(isset($lang) && $lang == "hr"){
+								$upit="SELECT * FROM listajela";
+								echo "<h1>Jela</h1>";
+									}
+								else{
+								$upit="SELECT * FROM meallist";
+								echo "<h1>Meals</h1>";
+									}
+								$result = mysqli_query($con, $upit);
+					
+								while($row = mysqli_fetch_array($result)) {
+								if(($row['IDmeal']<=10)){
+								$jelo=$row['mealName'];
+								$IDjelo=$row['IDmeal'];
+								$link = "jelo.php?id=$IDjelo&lan=$lang";
+								echo "<a href='".$link."'><p>$jelo</p></a>";
+								}
+								}
+							mysqli_close($con);
+						?>
 					</section>
                     <section>
-                        <a href="pica.php"><h1>Pića</h1></a>
+						<?php
+							$link = "pica.php?lan=$lang";
+							if(isset($lang) && $lang == "hr"){
+								echo "<a href='".$link."'><h1>Pića</h1></a>";
+									}
+								else{
+								echo "<a href='".$link."'><h1>Drinks</h1></a>";
+									}
+						?>
                     </section>
 
 
                 </article>
 
 
-            </div> <!-- #main -->
-        </div> <!-- #main-container -->
+            </div> 
+        </div>
 
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
